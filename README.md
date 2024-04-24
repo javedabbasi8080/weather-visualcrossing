@@ -21,13 +21,13 @@ async function fetchAndDisplayWeatherData() {
 }
 ```
 
-#displayWeatherData Function
+# displayWeatherData Function
     • Iterates through the weather data object.
     • For each key:
         ◦ If the value is an array, creates a function to display the list data in a table.
         ◦ If the value is an object, recursively calls the displayNestedObject function.
         ◦ If the value is a primitive type, renders it as a key-value pair on the webpage.
-
+```javascript
 function displayWeatherData(data) {
   const weatherDataDiv = document.getElementById('weatherData');
   
@@ -43,12 +43,14 @@ function displayWeatherData(data) {
     }
   }
 }
+```
 
-#createListDataFunction Function
+# createListDataFunction Function
     • Creates a dynamic function to display the list data in a table when invoked.
     • The function name is based on the key name, prefixed with "display" and capitalized.
     • When invoked, the function clears the weatherDataDiv, adds a heading with the key name, and renders the list data in a table.
 
+```javascript
 function createListDataFunction(key, list) {
   window[`display${capitalizeFirstLetter(key)}Data`] = function() {
     const weatherDataDiv = document.getElementById('weatherData');
@@ -57,10 +59,11 @@ function createListDataFunction(key, list) {
   };
 }
 
-#displayListDataInTable Function
+```
+# displayListDataInTable Function
     • Generates a table with column headings based on the keys of the list items.
     • Appends the table to the specified container element.
-
+```javascript
 function displayListDataInTable(list, container) {
   const table = document.createElement('table');
   const keys = Object.keys(list[0]);
@@ -84,15 +87,15 @@ function displayListDataInTable(list, container) {
 
   container.appendChild(table);
 }
+```
 
-
-#displayNestedObject Function
+# displayNestedObject Function
     • Recursively iterates through the nested object.
     • For each key:
         ◦ If the value is an array, calls the createListDataFunction to create a function for displaying list data.
         ◦ If the value is an object, recursively calls itself.
         ◦ If the value is a primitive type, renders it as a key-value pair on the webpage with the parent key prefixed.
-
+```javascript
 function displayNestedObject(obj, container, parentKey) {
   for (const key in obj) {
     if (Array.isArray(obj[key])) {
@@ -105,11 +108,12 @@ function displayNestedObject(obj, container, parentKey) {
     }
   }
 }
-
-#capitalizeFirstLetter Function
+```
+# capitalizeFirstLetter Function
     • Capitalizes the first letter of a string.
     • Returns the input string with the first letter capitalized.
-
+```javascript
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+```
