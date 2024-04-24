@@ -1,4 +1,4 @@
-#This sample code shows how to use the [Visual Crossing Weather API](https://www.visualcrossing.com/resources/documentation/weather-api/timeline-weather-api) to do:
+This sample code shows how to use the [Visual Crossing Weather API](https://www.visualcrossing.com/resources/documentation/weather-api/timeline-weather-api) to do:
 
 # fetchAndDisplayWeatherData Function
     • Fetches weather data from the API endpoint URL.
