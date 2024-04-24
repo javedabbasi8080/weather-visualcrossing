@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather Data Display</title>
+</head>
+<body>
+  <div id="weatherData"></div>
+
+  <script>
+    const key = "";
+    // Define the API endpoint URL
+    const apiUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/London,UK?key=${key}`;
+
+    /**
+     * Fetches weather data from the API and displays it.
+     */
+    async function fetchAndDisplayWeatherData() {
+      try {
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch weather data');
+        }
+
+        // Parse JSON response
+        const data = await response.json();
+        displayWeatherData(data);
+
+      } catch (error) {
+        console.error('Error fetching weather data:', error);
+      }
+    }
+
+    /**
+     * Displays weather data on the webpage.
+     * @param {object} data - The weather data object.
+     */
+    function displayWeatherData(data) {
+      const weatherDataDiv = document.getElementById('weatherData');
+      
+      for (const key in data) {
+        if (Array.isArray(data[key])) {
+          // Create separate function for keys with list data
+          createListDataFunction(key, data[key]);
+        }
+
+        if (typeof data[key] === 'object') {
+          // Recursively display nested objects
+          displayNestedObject(data[key], weatherDataDiv, key);
+        } else {
+          // Display key-value pairs as text
+          weatherDataDiv.insertAdjacentHTML('beforeend', `<p><strong>${key}:</strong> ${data[key]}</p>`);
+        }
+      }
+    }
+
+    /**
+     * Creates a separate function for keys that contain list data.
+     * @param {string} key - The key name.
+     * @param {Array} list - The list data.
+     */
+    function createListDataFunction(key, list) {
+      window[`display${capitalizeFirstLetter(key)}Data`] = function() {
+        const weatherDataDiv = document.getElementById('weatherData');
+        weatherDataDiv.innerHTML = `<h2>${key}</h2>`;
+        displayListDataInTable(list, weatherDataDiv);
+      };
+    }
+
+    /**
+     * Displays list data in a table.
+     * @param {Array} list - The list data.
+     * @param {HTMLElement} container - The container element to append the table to.
+     */
+    function displayListDataInTable(list, container) {
+      const table = document.createElement('table');
+      const keys = Object.keys(list[0]);
+
+      // Generate table header row
+      let headerRow = table.insertRow();
+      keys.forEach(key => {
+        let th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
+      });
+
+      // Generate table body rows
+      list.forEach(item => {
+        let row = table.insertRow();
+        keys.forEach(key => {
+          let cell = row.insertCell();
+          cell.textContent = item[key];
+        });
+      });
+
+      container.appendChild(table);
+    }
+
+    /**
+     * Displays nested object data.
+     * @param {object} obj - The nested object.
+     * @param {HTMLElement} container - The container element to display the data.
+     * @param {string} parentKey - The parent key name.
+     */
+    function displayNestedObject(obj, container, parentKey) {
+      for (const key in obj) {
+        if (Array.isArray(obj[key])) {
+          // Display table for list data
+          container.insertAdjacentHTML('beforeend', `<h2>${parentKey}.${key}</h2>`);
+          displayListDataInTable(obj[key], container);
+        } else if (typeof obj[key] === 'object') {
+          // Recursively display nested objects
+          displayNestedObject(obj[key], container, `${parentKey}.${key}`);
+        } else {
+          // Display key-value pairs as text
+          container.insertAdjacentHTML('beforeend', `<p><strong>${parentKey}.${key}:</strong> ${obj[key]}</p>`);
+        }
+      }
+    }
+
+    /**
+     * Capitalizes the first letter of a string.
+     * @param {string} string - The input string.
+     * @returns {string} The string with the first letter capitalized.
+     */
+    function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    // Fetch and display weather data when the page loads
+    fetchAndDisplayWeatherData();
+  </script>
+</body>
+</html>
