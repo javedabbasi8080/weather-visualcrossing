@@ -1,9 +1,9 @@
-#fetchAndDisplayWeatherData Function
+# fetchAndDisplayWeatherData Function
     • Fetches weather data from the API endpoint URL.
     • Parses the JSON response.
     • Calls the displayWeatherData function to render the weather data on the webpage.
     • Handles errors if the API request fails.
-
+```javascript
 async function fetchAndDisplayWeatherData() {
   try {
     const response = await fetch(apiUrl);
@@ -19,6 +19,7 @@ async function fetchAndDisplayWeatherData() {
     console.error('Error fetching weather data:', error);
   }
 }
+```
 
 #displayWeatherData Function
     • Iterates through the weather data object.
